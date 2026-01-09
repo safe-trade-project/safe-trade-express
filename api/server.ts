@@ -27,11 +27,6 @@ app.get("/crypto/:id/market-chart", async (req: Request, res: Response) => {
 	res.send(resp);
 });
 
-app.listen(port, () => {
-	console.log(`Listening on port ${port}...`);
-});
-
-
 
 const API_KEY = process.env.COINGECKO_API_KEY || "";
 const top50CoinGeckoIds = [
