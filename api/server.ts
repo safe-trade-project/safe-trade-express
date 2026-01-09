@@ -157,3 +157,6 @@ const fetchMarketChart = async (id: string | undefined) => {
 		throw error;
 	}
 };
+
+
+export default app;
