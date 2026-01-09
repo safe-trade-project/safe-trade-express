@@ -24,6 +24,11 @@ app.get("/crypto/:id", (req: Request, res: Response) => {
 	res.send(resp);
 });
 
+app.get("/crypto/:id/market-chart", async (req: Request, res: Response) => {
+	let resp = fetchCoin(req.params.id);
+	res.send(resp);
+});
+
 app.listen(port, () => {
 	console.log(`Listening on port ${port}...`);
 });
@@ -132,3 +137,25 @@ const fetchCoin = async (id: string | undefined) => {
 
 
 
+const fetchMarketChart = async (id: string | undefined) => {
+	try {
+		if (!id) {
+			throw new Error("Id is required");
+		}
+		const response = await fetch(
+			`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=365`,
+			{
+				headers: {
+					"x-cg-demo-api-key": API_KEY ?? "",
+				},
+			},
+		);
+
+		const data = await response.json();
+
+		return data as CryptoMarketDto;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+};
