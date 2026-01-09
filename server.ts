@@ -25,7 +25,7 @@ app.get("/crypto/:id", (req: Request, res: Response) => {
 });
 
 app.get("/crypto/:id/market-chart", async (req: Request, res: Response) => {
-	let resp = fetchCoin(req.params.id);
+	let resp = fetchMarketChart(req.params.id);
 	res.send(resp);
 });
 
@@ -153,7 +153,7 @@ const fetchMarketChart = async (id: string | undefined) => {
 
 		const data = await response.json();
 
-		return data as CryptoMarketDto;
+		return data;
 	} catch (error) {
 		console.error(error);
 		throw error;
