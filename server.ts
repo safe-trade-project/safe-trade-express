@@ -1,8 +1,6 @@
 import express from "express";
 import cors from "cors";
 import type { Request, Response } from "express";
-import type { CryptoDetailDto } from "./contracts/cryptoDetail.dto";
-import type { CryptoBasicDto } from "./contracts/cryptoBasic.dto";
 
 const app = express();
 const port = 8080;
