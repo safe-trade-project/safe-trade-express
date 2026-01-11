@@ -4,6 +4,9 @@ import type { Request, Response } from "express";
 
 const app = express();
 const port = 8080;
+const COINS_CACHE_TTL = 20 * 1000;
+let coinsCacheData: any = null;
+let coinsCacheExpiry = 0;
 
 app.use(cors());
 
@@ -12,18 +15,28 @@ app.get("/", (_: Request, res: Response) => {
 });
 
 app.get("/crypto-all", async (_: Request, res: Response) => {
-	let resp = await fetchCoins();
-	console.log(resp);
-	res.send(resp);
+	if (Date.now() > coinsCacheExpiry) {
+			let resp = await fetchCoins();
+			coinsCacheExpiry = Date.now() + COINS_CACHE_TTL;
+			coinsCacheData = resp
+			res.send(resp);
+
+	}else{
+		console.log("RETURNING CACHED DATA ")
+		res.send(coinsCacheData);
+
+	}
+
 });
 
-app.get("/crypto/:id", (req: Request, res: Response) => {
-	let resp = fetchCoin(req.params.id);
+app.get("/crypto/:id", async (req: Request, res: Response) => {
+	let resp = await fetchCoin(req.params.id);
+	console.log(resp)
 	res.send(resp);
 });
 
 app.get("/crypto/:id/market-chart", async (req: Request, res: Response) => {
-	let resp = fetchMarketChart(req.params.id);
+	let resp = await fetchMarketChart(req.params.id);
 	res.send(resp);
 });
 
