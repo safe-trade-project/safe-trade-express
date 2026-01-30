@@ -9,9 +9,9 @@ let coinsCacheData: any = null;
 let coinsCacheExpiry = 0;
 
 app.use(cors({
-	origin: "*",
-	methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-	allowedHeaders: ["Content-Type", "Authorization"]
+	origin: true,              // reflect request origin
+	methods: "*",
+	allowedHeaders: "*",
 }));
 
 app.get("/", (_: Request, res: Response) => {
