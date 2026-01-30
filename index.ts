@@ -8,25 +8,27 @@ const COINS_CACHE_TTL = 20 * 1000;
 let coinsCacheData: any = null;
 let coinsCacheExpiry = 0;
 
-app.use(cors());
+app.use(cors({
+	origin: "*",
+	methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+	allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 app.get("/", (_: Request, res: Response) => {
 	res.send("Hello World!");
 });
 
 app.get("/crypto-all", async (_: Request, res: Response) => {
-	if (Date.now() > coinsCacheExpiry) {
-			let resp = await fetchCoins();
-			coinsCacheExpiry = Date.now() + COINS_CACHE_TTL;
-			coinsCacheData = resp
-			res.send(resp);
-
-	}else{
+	const now = Date.now();
+	if (coinsCacheData && now < coinsCacheExpiry) {
 		console.log("RETURNING CACHED DATA ")
 		res.send(coinsCacheData);
-
+	} else {
+		let resp = await fetchCoins();
+		coinsCacheExpiry = now + COINS_CACHE_TTL;
+		coinsCacheData = resp;
+		res.send(resp);
 	}
-
 });
 
 app.get("/crypto/:id", async (req: Request, res: Response) => {
